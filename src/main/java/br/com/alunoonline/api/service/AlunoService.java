@@ -1,10 +1,10 @@
 package br.com.alunoonline.api.service;
 
+import br.com.alunoonline.api.client.ViaCepClient;
 import br.com.alunoonline.api.model.Aluno;
 import br.com.alunoonline.api.repository.AlunoRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,10 +18,27 @@ import java.util.Optional;
 @AllArgsConstructor
 public class AlunoService {
 
-    AlunoRepository alunoRepository;
+    private AlunoRepository alunoRepository;
+    private ViaCepClient viaCepClient;
 
     public void create(Aluno aluno) {
+        log.info("Iniciando Criação de aluno");
+        atualizaEnderecoPorCep(aluno);
+
         alunoRepository.save(aluno);
+        log.info("Encerrando Criação de aluno");
+
+    }
+
+    private void atualizaEnderecoPorCep(Aluno aluno) {
+        var cep = aluno.getEndereco().getCep();
+        var enderecoResponse = viaCepClient.consultaCep(cep);
+
+        aluno.getEndereco().setLocalidade(enderecoResponse.getLocalidade());
+        aluno.getEndereco().setUf(enderecoResponse.getUf());
+        aluno.getEndereco().setBairro(enderecoResponse.getBairro());
+        aluno.getEndereco().setComplemento(enderecoResponse.getComplemento());
+        aluno.getEndereco().setLogradouro(enderecoResponse.getLogradouro());
     }
 
     public List<Aluno> findAll() {
