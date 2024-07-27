@@ -1,6 +1,6 @@
 package br.com.alunoonline.api.exception;
 
-import com.alunoonline.api.model.dtos.ErrorDTO;
+import br.com.alunoonline.api.dtos.ErrorDTO;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -18,6 +18,21 @@ import java.util.stream.Collectors;
 @Log4j2
 @ControllerAdvice
 public class HandleValidationExceptions {
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseBody
+    public ResponseEntity<ErrorDTO> handleException(ResourceNotFoundException e) {
+
+        ErrorDTO erroCapturado =
+                ErrorDTO.builder() //
+                        .error(HttpStatus.NOT_FOUND.getReasonPhrase()) //
+                        .detalhes(e.getMessage())
+                        .build();
+
+        log.info("Erro lançado {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erroCapturado);
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseBody
     public ResponseEntity<ErrorDTO> handleException(Exception e) {
@@ -28,7 +43,7 @@ public class HandleValidationExceptions {
                         .detalhes(e.getMessage())
                         .build();
 
-       log.info("Erros", e.getMessage());
+       log.info("Erros {} ", e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(erroCapturado);
     }
 

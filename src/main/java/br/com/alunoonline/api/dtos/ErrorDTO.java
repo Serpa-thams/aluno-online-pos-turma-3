@@ -1,4 +1,4 @@
-package com.alunoonline.api.model.dtos;
+package br.com.alunoonline.api.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
