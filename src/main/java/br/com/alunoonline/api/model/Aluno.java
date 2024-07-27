@@ -1,9 +1,7 @@
 package br.com.alunoonline.api.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import br.com.alunoonline.api.validators.EmailValidation;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -28,10 +26,15 @@ public class Aluno implements Serializable {
     @Size(min = 2, max = 150, message = "O nome deve ter entre 2 e 30 caracteres")
     private String name;
 
-    @Email(message = "Informe um e-mail válido para o campo, deve conter @")
+     @EmailValidation
     private String email;
+
     @CPF
     private String cpf;
 
     private Integer anoNascimento;
+
+    @OneToOne(cascade = CascadeType.ALL, optional = true)
+    private Endereco endereco;
+
 }

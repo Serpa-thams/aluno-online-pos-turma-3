@@ -22,7 +22,7 @@ public class AlunoRepositoryTest {
     @Test
     @Order(1)
     public void testCreateAluno() {
-        Aluno aluno  = new Aluno(null, "João", EMAIL, "00011122233", 1982);
+        Aluno aluno  = new Aluno(null, "João", EMAIL, "00011122233", 1982, null);
         aluno =  alunoRepository.save(aluno);
         assertThat(aluno.getId()).isNotNull();
     }
