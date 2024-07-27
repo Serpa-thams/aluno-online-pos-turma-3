@@ -18,7 +18,7 @@ import java.util.Optional;
 @RequestMapping("/aluno")
 public class AlunoController {
 
-    private AlunoService alunoService;
+    private final AlunoService alunoService;
 
 
     @PostMapping
